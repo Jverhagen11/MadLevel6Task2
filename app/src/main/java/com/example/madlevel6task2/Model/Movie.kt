@@ -1,12 +1,29 @@
 package com.example.madlevel6task2.Model
 
-data class Movie (
-    var title: String,
-    var release_date: String,
-    var overview: String,
-    var vote_average: Double,
-    var original_title: String,
-    var poster_path: String,
-    var backdrop_path: String
+import com.google.gson.annotations.SerializedName
 
-)
+class MovieResponse() {
+
+    data class Root (
+            @SerializedName("page") val page : Int,
+            @SerializedName("total_results") val total_results : Int,
+            @SerializedName("total_pages") val total_pages : Int,
+            @SerializedName("results") val results : List<Movie>
+    )
+
+    data class Movie (
+            @SerializedName("vote_count") val vote_count : Int,
+            @SerializedName("poster_path") val poster_path : String,
+            @SerializedName("id") val id : Int,
+            @SerializedName("backdrop_path") val backdrop_path : String,
+            @SerializedName("title") val title : String,
+            @SerializedName("vote_average") val vote_average : Double,
+            @SerializedName("overview") val overview : String,
+            @SerializedName("release_date") val release_date : String
+    ) {
+        fun getMovieUrl(): String {
+            return "https://image.tmdb.org/t/p/original%s".format(poster_path)
+        }
+    }
+
+}

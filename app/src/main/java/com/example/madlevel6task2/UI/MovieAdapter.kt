@@ -6,40 +6,35 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.madlevel6task2.Model.Movie
+import com.example.madlevel6task2.Model.MovieResponse
 import com.example.madlevel6task2.R
-import kotlinx.android.synthetic.main.fragment_movie_info.view.*
-import kotlinx.android.synthetic.main.item_movie.view.*
-import kotlinx.android.synthetic.main.item_movie.view.movieImage
+import com.example.madlevel6task2.databinding.ItemMovieBinding
 
-class MovieAdapter(private val colors: List<Movie>, private val onClick: (Movie) -> Unit) :
-    RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        init {
-            itemView.setOnClickListener { onClick(colors[adapterPosition]) }
-        }
-
-        fun bind(movie: Movie) {
-            itemView.run {
-
-            }
-
-            Glide.with(context).load(movie.poster_path).into(itemView.movieImage)
-
-        }
-    }
+class MovieAdapter (private val movies: List<MovieResponse.Movie>): RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
 
     private lateinit var context: Context
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        context = parent.context
+    inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
-        return ViewHolder(
-            LayoutInflater.from(context).inflate(R.layout.item_movie, parent, false)
-        )
+        val binding = ItemMovieBinding.bind(itemView)
+
+        fun dataBind(movie: MovieResponse.Movie) {
+            binding.movieNumber.text = "%s.".format((movies.indexOf(movie)+1).toString())
+            Glide.with(context).load(movie.getMovieUrl()).into(binding.movieImage)
+        }
+
     }
 
-    override fun getItemCount(): Int = colors.size
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        context = parent.context
+        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_movie, parent, false))
+    }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(colors[position])
+    override fun getItemCount(): Int {
+        return movies.size
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.dataBind(movies[position])
+    }
 }
