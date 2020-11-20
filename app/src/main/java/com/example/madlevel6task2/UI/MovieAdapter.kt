@@ -10,17 +10,24 @@ import com.example.madlevel6task2.Model.MovieResponse
 import com.example.madlevel6task2.R
 import com.example.madlevel6task2.databinding.ItemMovieBinding
 
-class MovieAdapter (private val movies: List<MovieResponse.Movie>): RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
+class MovieAdapter (private val movies: List<MovieResponse.Movie>, private val onClick: (MovieResponse.Movie) -> Unit) : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
 
     private lateinit var context: Context
+    
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
         val binding = ItemMovieBinding.bind(itemView)
 
+        init {
+            itemView.setOnClickListener {
+                onClick(movies[adapterPosition])
+            }
+        }
+
         fun dataBind(movie: MovieResponse.Movie) {
             binding.movieNumber.text = "%s.".format((movies.indexOf(movie)+1).toString())
-            Glide.with(context).load(movie.getMovieUrl()).into(binding.movieImage)
+            Glide.with(context).load(movie.getMovieImageUrl(movie.poster_path)).into(binding.movieImage)
         }
 
     }
